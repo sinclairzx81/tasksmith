@@ -37,18 +37,17 @@ import { path } from '../path/index.ts'
 import { tsc } from '../tsc/index.ts'
 import { shell } from '../shell/index.ts'
 
-
-const MBUILD = '__build__' // Interior Build Directory
+const MBUILD = '.build' // Interior Build Directory
 
 // ------------------------------------------------------------------
-// Options
+// BuildOptions
 // ------------------------------------------------------------------
-export interface BuildOptions {
-  /** Target Build Directory */
-  target: string,
-   /** Package Json Configuration */
-  packageJson: {
-    [key: string]: unknown // allow additional
+interface BuildOptions {
+  compiler: `latest` | `next` | `4.9.5` | ({} & string), // typescript version
+  outdir: string,                                        // output directory
+  additional: string[],                                  // additional files
+  packageJson: {                                         // required 
+    [key: string]: unknown
     name: string
     version: string
     description: string
@@ -59,22 +58,20 @@ export interface BuildOptions {
       type: 'git' | (string & {}), 
       url: 'https://github.com/sinclairzx81/project' | (string & {}) 
     }
-  },
-  /** Additional Files to Include*/
-  include: string[]
+  }
 }
 // ------------------------------------------------------------------
 // Clean
 // ------------------------------------------------------------------
 async function clean(_baseUrl: string, options: BuildOptions): Promise<void> {
   console.log('build: clean')
-  await folder(options.target).delete()
+  await folder(options.outdir).delete()
 }
 
 // ------------------------------------------------------------------
 // CreatePackageJson
 // ------------------------------------------------------------------
-export function buildExportMap(indexList: string[]): Record<string, unknown> {
+function buildExportMap(indexList: string[]): Record<string, unknown> {
   const exports: Record<string, {
     require: { types: string, default: string }
     import: { types: string, default: string }
@@ -105,7 +102,7 @@ async function createPackageJson(baseUrl: string, options: BuildOptions): Promis
   console.log('build: package-json')
   const indexList = await folder(baseUrl).indexList()
   const exportMap = buildExportMap(indexList)
-  await file(`${options.target}/build/package.json`).create(JSON.stringify({
+  await file(`${options.outdir}/build/package.json`).create(JSON.stringify({
     ...options.packageJson,
     ...exportMap 
   }, null, 2))
@@ -116,13 +113,13 @@ async function createPackageJson(baseUrl: string, options: BuildOptions): Promis
 // ------------------------------------------------------------------
 async function createCommonJSAliases(baseUrl: string, options: BuildOptions): Promise<void> {
   console.log('build: commonjs-aliases')
-  await folder(`${options.target}/build`).create()
+  await folder(`${options.outdir}/build`).create()
   for(const indexPath of await folder(baseUrl).indexList()) {
     const dirname = path.dirname(indexPath)
     const dirbase = path.basename(dirname)
     if(dirbase === '.') continue
-    await folder(`${options.target}/build/${dirname}`).create()
-    await file(`${options.target}/build/${dirname}/package.json`).create(JSON.stringify({
+    await folder(`${options.outdir}/build/${dirname}`).create()
+    await file(`${options.outdir}/build/${dirname}/package.json`).create(JSON.stringify({
       main: `../${MBUILD}/cjs/${dirbase}/index.js`,
       types: `../${MBUILD}/cjs/${dirbase}/index.d.ts`
     }, null, 2))
@@ -131,7 +128,7 @@ async function createCommonJSAliases(baseUrl: string, options: BuildOptions): Pr
 async function buildCommonJS(baseUrl: string, options: BuildOptions): Promise<void> {
   console.log('build: commonjs')
   const working = `${settings.get().tempDirectory}/build-cjs`
-  const outdir = `${options.target}/build/${MBUILD}/cjs`
+  const outdir = `${options.outdir}/build/${MBUILD}/cjs`
   await folder(`${working}`).delete()
   await folder(`${working}`).addContents(baseUrl, {
     extensionRename: [],
@@ -149,7 +146,7 @@ async function buildCommonJS(baseUrl: string, options: BuildOptions): Promise<vo
     },
     files
   }, null, 2))
-  await tsc().run(`-p ${working}/tsconfig.json --outDir ${outdir} --declaration`)
+  await tsc(options.compiler).run(`-p ${working}/tsconfig.json --outDir ${outdir} --declaration`)
   await folder(`${working}`).delete()
 }
 
@@ -159,7 +156,7 @@ async function buildCommonJS(baseUrl: string, options: BuildOptions): Promise<vo
 async function buildEsm(baseUrl: string, options: BuildOptions): Promise<void> {
   console.log('build: esm')
   const working = `${settings.get().tempDirectory}/build-esm`
-  const outdir = `${options.target}/build/${MBUILD}/esm`
+  const outdir = `${options.outdir}/build/${MBUILD}/esm`
   await folder(`${working}`).delete()
   await folder(`${working}`).addContents(baseUrl, {
     extensionRename: [['.ts', '.mts']],
@@ -177,7 +174,7 @@ async function buildEsm(baseUrl: string, options: BuildOptions): Promise<void> {
     },
     files
   }, null, 2)) 
-  await tsc().run(`-p ${working}/tsconfig.json --outDir ${outdir} --declaration`)
+  await tsc(options.compiler).run(`-p ${working}/tsconfig.json --outDir ${outdir} --declaration`)
   await folder(`${working}`).delete()
 }
 
@@ -186,8 +183,8 @@ async function buildEsm(baseUrl: string, options: BuildOptions): Promise<void> {
 // ------------------------------------------------------------------
 async function additionalFiles(options: BuildOptions): Promise<void> {
   console.log('build: additional-files')
-  const outdir = `${options.target}/build`
-  for(const additional of options.include) {
+  const outdir = `${options.outdir}/build`
+  for(const additional of options.additional) {
     await folder(outdir).add(additional)
   }
 }
@@ -195,18 +192,18 @@ async function additionalFiles(options: BuildOptions): Promise<void> {
 // ------------------------------------------------------------------
 // Pack
 // ------------------------------------------------------------------
-export async function pack(options: BuildOptions): Promise<void> {
+async function pack(options: BuildOptions): Promise<void> {
   console.log('build: pack')
-  const target = `${options.target}/build`
+  const target = `${options.outdir}/build`
   await shell(`cd ${target} && npm pack`)
 }
 
 // ------------------------------------------------------------------
 // Check
 // ------------------------------------------------------------------
-export async function check(options: BuildOptions): Promise<number> {
+async function check(options: BuildOptions): Promise<number> {
   console.log('build: check')
-  const target = `${options.target}/build`
+  const target = `${options.outdir}/build`
   const name = options.packageJson.name.replace('@', '').replaceAll('/', '-')
   const pack = `${target}/${name}-${options.packageJson.version}.tgz`
   return await attw(pack)

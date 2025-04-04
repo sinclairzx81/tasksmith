@@ -28,11 +28,18 @@ THE SOFTWARE.
 
 import { shell } from '../shell/index.ts'
 
+// ------------------------------------------------------------------
+// Start
+// ------------------------------------------------------------------
+const start = (version: string) => `deno run -A --no-lock npm:typescript@${version}/tsc`
+
+// ------------------------------------------------------------------
+// Functions
+// ------------------------------------------------------------------
 class Tsc {
   constructor(private readonly version: string) {}
-  /** Runs the typescript compiler with the given command line options */
   public async run(options: string): Promise<number> {
-    return await shell(`deno run -A npm:typescript@${this.version}/tsc ${options}`)
+    return await shell(`${start(this.version)} ${options}`)
   }
 }
 /** Returns a typescript compiler version */
