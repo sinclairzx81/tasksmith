@@ -28,9 +28,15 @@ THE SOFTWARE.
 
 import { shell } from '../shell/index.ts'
 
-const __attw__ = `@arethetypeswrong/cli@0.13.2`
+// ------------------------------------------------------------------
+// Start
+// ------------------------------------------------------------------
+const start = `deno run -A --no-lock npm:@arethetypeswrong/cli@0.13.2`
 
+// ------------------------------------------------------------------
+// Functions
+// ------------------------------------------------------------------
 /** Runs a `Are the types wrong` query on a npm pack */
-export async function attw(pack: string) {
-  return await shell(`deno run -A npm:${__attw__} ${pack}`)
+export async function attw(pack_tgz: string) {
+  return await shell(`${start} ${pack_tgz}`)
 }

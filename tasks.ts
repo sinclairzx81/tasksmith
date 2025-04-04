@@ -15,31 +15,29 @@ Task.run('start', async () => {
 })
 
 // ------------------------------------------------------------------
-// Metrics: Reports bundle size metrics for the given module
+// Bundle
 // ------------------------------------------------------------------
-Task.run('metrics', async () => {
-  await Task.esbuild.metrics('./src-tree/index.ts')
+Task.run('bundle', async () => {
+  await Task.esbuild.compression('./src-tree/index.ts')
 })
-
 // ------------------------------------------------------------------
-// Build: Generates a NPM publishable package from the example `src-tree`
+// Build
 // ------------------------------------------------------------------
-Task.run('build', async () => {
-  await Task.build('src-tree', { 
-    target: 'target',
-    include: ['license', 'readme.md'],
-    packageJson: {
-      name: '@sinclair/project',
-      description: 'A software library',
-      version: '1.0.0',
-      author: 'user',
-      license: 'MIT',
-      keywords: ['tooling', 'automation'],
-      repository: { 
-        type: 'git',
-        url: 'https://github.com/sinclairzx81/project'
-      }
+Task.run('build', () => Task.build('src-tree', { 
+  compiler: 'latest',
+  outdir: 'target',
+  additional: ['license', 'readme.md'],
+  packageJson: {
+    name: '@sinclair/project',
+    description: 'A software library',
+    version: '1.0.0',
+    author: 'user',
+    license: 'MIT',
+    keywords: ['tooling', 'automation'],
+    repository: { 
+      type: 'git',
+      url: 'https://github.com/sinclairzx81/project'
     }
-  })
-})
+  }
+}))
 
