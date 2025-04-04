@@ -1,0 +1,15 @@
+{
+  "tasks": {
+    "clean": "deno run -A tasks.ts clean",
+    "start": "deno run -A  tasks.ts start",
+    "test": "deno run -A  tasks.ts test",
+    "build": "deno run -A tasks.ts build",
+    "format": "deno run -A  tasks.ts format"
+  },
+  "imports": {
+    "jsr:Tasksmith": "./src/index.ts"
+  },
+  "exclude": [
+    "target"
+  ]
+}

@@ -1,0 +1,23 @@
+name: Test
+on: [push, pull_request]
+jobs:
+  # -----------------------------------------------------------
+  # Deno 
+  # -----------------------------------------------------------
+  Deno:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 2
+    strategy:
+      matrix:
+        node: [20.x]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: canary
+
+      - name: Build Library
+        run: deno task build
