@@ -26,14 +26,3 @@ THE SOFTWARE.
 
 ---------------------------------------------------------------------------*/
 
-import { shell } from '../shell/index.ts'
-
-const command = `deno run -A --no-lock npm:@arethetypeswrong/cli@0.13.2`
-
-// ------------------------------------------------------------------
-// Functions
-// ------------------------------------------------------------------
-/** Runs a "Are The Types Wrong" query on a npm .tgz pack */
-export async function attw(packFile: string) {
-  return await shell(`${command} ${packFile}`)
-}

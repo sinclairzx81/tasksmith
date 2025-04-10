@@ -66,7 +66,7 @@ Task.run('serve', () => Promise.all([
 The `Task` namespace also provides a `build(...)` function which creates a npm publishable package from a Deno source tree. Internally this function uses TypeScript for compilation and the `attw` command line CLI for module resolution verification. The output is a dual `cjs` and `esm` package that uses the [package json redirects](https://github.com/andrewbranch/example-subpath-exports-ts-compat/tree/main/examples/node_modules/package-json-redirects) resolution scheme. 
 
 ```typescript
-Task.run('build', () => Task.build('src-tree', { 
+Task.run('build', () => Task.build('src-build', { 
   compiler: '5.8.2', // tsc compiler version
   outdir: 'dist',    
   additional: ['license', 'readme.md'],
