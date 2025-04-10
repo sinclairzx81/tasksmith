@@ -31,7 +31,7 @@ import { shell } from '../shell/index.ts'
 // ------------------------------------------------------------------
 // Start
 // ------------------------------------------------------------------
-const start = (version: string) => `deno run -A --no-lock npm:typescript@${version}/tsc`
+const command = (version: string) => `deno run -A --no-lock npm:typescript@${version}/tsc`
 
 // ------------------------------------------------------------------
 // Functions
@@ -39,7 +39,7 @@ const start = (version: string) => `deno run -A --no-lock npm:typescript@${versi
 class Tsc {
   constructor(private readonly version: string) {}
   public async run(options: string): Promise<number> {
-    return await shell(`${start(this.version)} ${options}`)
+    return await shell(`${command(this.version)} ${options}`)
   }
 }
 /** Returns a typescript compiler version */

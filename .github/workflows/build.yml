@@ -22,5 +22,5 @@ jobs:
       - name: Build Library
         run: deno task build
 
-      - name: Bundle Library
+      - name: Run Bundle Metrics
         run: deno task bundle

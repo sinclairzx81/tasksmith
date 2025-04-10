@@ -1,31 +1,29 @@
 import { Task } from './src/index.ts'
 
 // ------------------------------------------------------------------
-// Clean: Removes the target build directory
+// Clean
 // ------------------------------------------------------------------
 Task.run('clean', async () => {
   await Task.folder('target').delete()
 })
-
 // ------------------------------------------------------------------
-// Start: Runs the example/index.ts file in watch mode
+// Start
 // ------------------------------------------------------------------
 Task.run('start', async () => {
   await Task.shell('deno run -A --watch example/index.ts')
 })
-
 // ------------------------------------------------------------------
-// Bundle
+// Metrics
 // ------------------------------------------------------------------
 Task.run('bundle', async () => {
-  await Task.esbuild.compression('./src-tree/index.ts')
+  await Task.esbuild.metrics('src-build/index.ts')
 })
 // ------------------------------------------------------------------
 // Build
 // ------------------------------------------------------------------
-Task.run('build', () => Task.build('src-tree', { 
+Task.run('build', () => Task.build('src-build', { 
   compiler: 'latest',
-  outdir: 'target',
+  outdir: 'target/build',
   additional: ['license', 'readme.md'],
   packageJson: {
     name: '@sinclair/project',
@@ -41,3 +39,9 @@ Task.run('build', () => Task.build('src-tree', {
   }
 }))
 
+// ------------------------------------------------------------------
+// Serve
+// ------------------------------------------------------------------
+Task.run('serve', async () => {
+  await Task.serve('src-serve/index.html', { port: 5000 })
+})

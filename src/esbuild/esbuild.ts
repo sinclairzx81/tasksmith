@@ -32,35 +32,29 @@ import { compress } from '../compress/index.ts'
 import { shell } from '../shell/index.ts'
 import { path } from '../path/index.ts'
 
-// ------------------------------------------------------------------
-// Start
-// ------------------------------------------------------------------
-const start = `deno run -A --no-lock npm:esbuild@0.25.2`
+const command = `deno run -A --no-lock npm:esbuild@0.25.2`
 
-// ------------------------------------------------------------------
-// Functions
-// ------------------------------------------------------------------
 /** Bundles the given module */
-export async function bundle(modulePath: string, outDir: string = `${settings.get().tempDirectory}/bundle`) {
+export async function bundle(entryPath: string, outDir: string = `${settings.get().tempDirectory}/bundle`): Promise<void>  {
   await folder(`${settings.get().tempDirectory}/bundle`).create()
-  await shell(`${start} --bundle ${modulePath} --outfile=${outDir}/bundle/${path.basename(modulePath)}.js`)
+  await shell(`${command} --bundle ${entryPath} --outfile=${outDir}/bundle/${path.basename(entryPath)}.js`)
 }
 /** Bundles + minifies the given module */
-export async function minify(modulePath: string, outDir: string = `${settings.get().tempDirectory}/minify`) {
+export async function minify(entryPath: string, outDir: string = `${settings.get().tempDirectory}/minify`): Promise<void>  {
   await folder(`${settings.get().tempDirectory}/bundle`).create()
-  await shell(`${start} --bundle ${modulePath} --minify --outfile=${outDir}/bundle/${path.basename(modulePath)}.min.js`)
+  await shell(`${command} --bundle ${entryPath} --minify --outfile=${outDir}/bundle/${path.basename(entryPath)}.min.js`)
 }
-/** Reports compression metrics for the given module path */
-export async function compression(modulePath: string) {
+/** Reports compression metrics for the given module graph */
+export async function metrics(entryPath: string): Promise<void> {
   await folder(`${settings.get().tempDirectory}/metrics`).create()
-  await shell(`${start} --bundle ${modulePath} --outfile=${settings.get().tempDirectory}/metrics/default.js`)
-  await shell(`${start} --bundle ${modulePath} --outfile=${settings.get().tempDirectory}/metrics/minified.js --minify`)
+  await shell(`${command} --bundle ${entryPath} --outfile=${settings.get().tempDirectory}/metrics/default.js`)
+  await shell(`${command} --bundle ${entryPath} --outfile=${settings.get().tempDirectory}/metrics/minified.js --minify`)
   const bundled = await Deno.readFile(`${settings.get().tempDirectory}/metrics/default.js`)
   const minified = await Deno.readFile(`${settings.get().tempDirectory}/metrics/minified.js`)
   const minifiedGzip = await compress.gzipSize(minified)
   console.table([
-    { Output: 'Bundled', Size: compress.formatSize(bundled.length) },
-    { Output: 'Minified', Size: compress.formatSize(minified.length) },
-    { Output: 'Minified + Gzip', Size: compress.formatSize(minifiedGzip) },
+    { Src: entryPath, Asset: 'Bundled', Size: compress.formatSize(bundled.length) },
+    { Src: entryPath, Asset: 'Minified', Size: compress.formatSize(minified.length) },
+    { Src: entryPath, Asset: 'Minified + Gzip', Size: compress.formatSize(minifiedGzip) },
   ])
 }

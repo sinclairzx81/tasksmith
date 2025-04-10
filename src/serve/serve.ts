@@ -26,14 +26,12 @@ THE SOFTWARE.
 
 ---------------------------------------------------------------------------*/
 
-import { shell } from '../shell/index.ts'
+// https://github.com/lucacasonato/esbuild_deno_loader
 
-const command = `deno run -A --no-lock npm:@arethetypeswrong/cli@0.13.2`
+export interface ServeOptions {
+  port: number
+}
 
-// ------------------------------------------------------------------
-// Functions
-// ------------------------------------------------------------------
-/** Runs a "Are The Types Wrong" query on a npm .tgz pack */
-export async function attw(packFile: string) {
-  return await shell(`${command} ${packFile}`)
+export function serve(_indexHtml: string, _port: ServeOptions): Promise<void> {
+  throw Error('not implemented')
 }
