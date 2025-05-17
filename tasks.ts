@@ -16,7 +16,12 @@ Task.run('start', async () => {
 // Metrics
 // ------------------------------------------------------------------
 Task.run('bundle', async () => {
-  await Task.esbuild.metrics('src-build/index.ts')
+  await Task.esbuild.metrics([
+    'src-build/index.ts',
+    'src-build/foo/foo.ts',
+    'src-build/bar/bar.ts',
+    'src-build/baz/baz.ts',
+  ])
 })
 // ------------------------------------------------------------------
 // Build
