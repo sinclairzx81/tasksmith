@@ -2,7 +2,7 @@
   "tasks": {
     "clean": "deno run -A tasks.ts clean",
     "start": "deno run -A  tasks.ts start",
-    "bundle": "deno run -A  tasks.ts bundle",
+    "metrics": "deno run -A  tasks.ts metrics",
     "build": "deno run -A tasks.ts build"
   },
   "exclude": [

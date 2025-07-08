@@ -55,11 +55,16 @@ export async function minify(entryPath: string, outDir: string = `${settings.get
 // ------------------------------------------------------------------
 async function computeMetricsForEntryPath(entryPath: string): Promise<{ path: string, bundled: string, minified: string, gzipped: string }> {
   const basename = path.basename(entryPath)
+  // targets
   const bundleTarget = `${settings.get().tempDirectory}/metrics/${basename}-bundle.js`
   const minifyTarget = `${settings.get().tempDirectory}/metrics/${basename}-minified.js`
+  // metafile: targets
+  const bundleMetafileTarget = `${settings.get().tempDirectory}/metrics/${basename}-bundle.meta.json`
+  const minifyMetafileTarget = `${settings.get().tempDirectory}/metrics/${basename}-minified.meta.json`
+
   await folder(`${settings.get().tempDirectory}/metrics`).create()
-  await shell(`${command} --bundle ${entryPath} --outfile=${bundleTarget}`)
-  await shell(`${command} --bundle ${entryPath} --outfile=${minifyTarget} --minify`)
+  await shell(`${command} --bundle ${entryPath} --outfile=${bundleTarget} --metafile=${bundleMetafileTarget}`)
+  await shell(`${command} --bundle ${entryPath} --outfile=${minifyTarget} --metafile=${minifyMetafileTarget} --minify`)
   const bundled = await Deno.readFile(`${bundleTarget}`)
   const minified = await Deno.readFile(`${minifyTarget}`)
   const minifiedGzip = await compress.gzipSize(minified)
@@ -74,4 +79,7 @@ async function computeMetricsForEntryPath(entryPath: string): Promise<{ path: st
 export async function metrics(entryPaths: string[]): Promise<void> {
   const results = await Promise.all(entryPaths.map(path => computeMetricsForEntryPath(path)))
   console.table(results)
+  console.log('')
+  console.log('  visit: https://esbuild.github.io/analyze/ for metafile analysis')
+  console.log('')
 }
