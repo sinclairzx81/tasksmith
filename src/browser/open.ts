@@ -1,8 +1,10 @@
 /*--------------------------------------------------------------------------
 
-Project
+Tasksmith
 
 The MIT License (MIT)
+
+Copyright (c) 2025 Haydn Paterson (sinclair)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +26,12 @@ THE SOFTWARE.
 
 ---------------------------------------------------------------------------*/
 
-export function foo() {
-  console.log('foo')
+import { shell } from '../task.ts'
+
+/** Opens a file or URL in the default system browser. */
+export async function open(path: string) {
+  const command = Deno.build.os === 'windows' ? `start ${path}` : Deno.build.os === 'darwin' ? `open ${path}` : Deno.build.os === 'linux' ? `xdg-open ${path}` : (() => {
+    throw new Error(`Unsupported OS: ${Deno.build.os}`)
+  })()
+  await shell(command)
 }

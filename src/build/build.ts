@@ -27,7 +27,7 @@ THE SOFTWARE.
 ---------------------------------------------------------------------------*/
 
 // deno-fmt-ignore-file
-// deno-lint-ignore-file ban-types
+// deno-lint-ignore-file
 
 import { settings } from '../settings/index.ts'
 import { attw } from '../attw/index.ts'

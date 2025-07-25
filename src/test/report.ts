@@ -26,23 +26,33 @@ THE SOFTWARE.
 
 ---------------------------------------------------------------------------*/
 
+import { browser } from '../browser/index.ts'
 import { shell } from '../shell/index.ts'
+import { writeManifest } from './manifest.ts'
 
 // ------------------------------------------------------------------
-// Start
+// Report
 // ------------------------------------------------------------------
-const command = (version: string) => `deno run -A --no-lock npm:typescript@${version}/tsc`
-
-// ------------------------------------------------------------------
-// Functions
-// ------------------------------------------------------------------
-class Tsc {
-  constructor(private readonly version: string) {}
-  public async run(options: string): Promise<number> {
-    return await shell(`${command(this.version)} ${options}`)
+export interface ReportOptions {
+  /** test manifest file path. default is `target/report/manifest.ts` */
+  manifest: string
+  /** coverage output directory path. default is `target/report/output/` */
+  coverage: string
+}
+function DefaultReportOptions(): ReportOptions {
+  return {
+    manifest: 'target/report/manifest.ts',
+    coverage: 'target/report/output/',
   }
 }
-/** Returns a typescript compiler version */
-export function tsc(version: string = 'latest'): Tsc {
-  return new Tsc(version)
+/**
+ * Generates a html coverage report for the given test roots.
+ */
+export async function report(roots: string[], options: Partial<ReportOptions> = {}) {
+  const options_ = { ...DefaultReportOptions(), ...options }
+  writeManifest(roots, options_.manifest)
+
+  await shell(`deno test -A ${options_.manifest} --coverage=${options_.coverage}`)
+  await shell(`deno coverage --html ${options_.coverage}`)
+  await browser.open(`${options_.coverage}/html/index.html`).catch(() => console.log('failed to open browser for coverage results'))
 }

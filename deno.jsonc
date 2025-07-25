@@ -1,0 +1,17 @@
+{
+  "tasks": {
+    "clean": "deno run -A tasks.ts clean",
+    "format": "deno run -A tasks.ts format",
+    "start": "deno run -A  tasks.ts start",
+    "test": "deno run -A  tasks.ts test",
+    "report": "deno run -A tasks.ts report",
+    "metrics": "deno run -A  tasks.ts metrics",
+    "build": "deno run -A tasks.ts build"
+  },
+  "fmt": {
+    "semiColons": false,
+    "singleQuote": true,
+    "lineWidth": 300
+  },
+  "exclude": []
+}

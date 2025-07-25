@@ -4,7 +4,7 @@ Tasksmith
 
 The MIT License (MIT)
 
-Copyright (c) 2025 Haydn Paterson (sinclair) 
+Copyright (c) 2025 Haydn Paterson (sinclair)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,13 +30,16 @@ import * as Path from 'jsr:@std/path@1.0.8'
 
 // This file is a pass-through for 'jsr:@std/path'
 
-export function basename(path: string) {
+export function seperator(): string {
+  return Path.SEPARATOR
+}
+export function basename(path: string): string {
   return Path.basename(path)
 }
-export function dirname(path: string) {
+export function dirname(path: string): string {
   return Path.dirname(path)
 }
-export function join(...paths: string[]): string{
+export function join(...paths: string[]): string {
   return Path.join(...paths)
 }
 export function extname(path: string): string {
@@ -44,4 +47,7 @@ export function extname(path: string): string {
 }
 export function relative(from: string, to: string): string {
   return Path.relative(from, to)
+}
+export function resolve(...pathSegments: string[]): string {
+  return Path.resolve(...pathSegments)
 }

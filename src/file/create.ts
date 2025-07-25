@@ -4,7 +4,7 @@ Tasksmith
 
 The MIT License (MIT)
 
-Copyright (c) 2025 Haydn Paterson (sinclair) 
+Copyright (c) 2025 Haydn Paterson (sinclair)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ THE SOFTWARE.
 import { path } from '../path/index.ts'
 
 /** Creates a file. If the file does not exist, it is created */
-export async function createFile(filePath: string, content: string = ""): Promise<void> {
-  await Deno.mkdir( path.dirname(filePath), { recursive: true })
+export async function createFile(filePath: string, content: string = ''): Promise<void> {
+  await Deno.mkdir(path.dirname(filePath), { recursive: true })
   await Deno.writeTextFile(filePath, content, { create: true })
 }

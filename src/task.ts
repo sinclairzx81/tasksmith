@@ -4,7 +4,7 @@ Tasksmith
 
 The MIT License (MIT)
 
-Copyright (c) 2025 Haydn Paterson (sinclair) 
+Copyright (c) 2025 Haydn Paterson (sinclair)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@ THE SOFTWARE.
 ---------------------------------------------------------------------------*/
 
 export * from './attw/index.ts'
+export * from './browser/index.ts'
 export * from './build/index.ts'
 export * from './esbuild/index.ts'
 export * from './file/index.ts'
@@ -36,4 +37,5 @@ export * from './run/index.ts'
 export * from './serve/index.ts'
 export * from './settings/index.ts'
 export * from './shell/index.ts'
+export * from './test/index.ts'
 export * from './tsc/index.ts'

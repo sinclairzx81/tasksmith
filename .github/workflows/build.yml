@@ -2,7 +2,7 @@ name: Test
 on: [push, pull_request]
 jobs:
   # -----------------------------------------------------------
-  # Deno 
+  # Deno
   # -----------------------------------------------------------
   Deno:
     runs-on: ${{ matrix.os }}
@@ -24,3 +24,9 @@ jobs:
 
       - name: Run Bundle Metrics
         run: deno task metrics
+
+      - name: Run Test
+        run: deno task test
+
+      - name: Run Report
+        run: deno task report
