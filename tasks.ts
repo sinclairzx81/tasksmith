@@ -7,6 +7,12 @@ Task.run('clean', async () => {
   await Task.folder('target').delete()
 })
 // ------------------------------------------------------------------
+// Format
+// ------------------------------------------------------------------
+Task.run('format', async () => {
+  await Task.shell('deno fmt src')
+})
+// ------------------------------------------------------------------
 // Start
 // ------------------------------------------------------------------
 Task.run('start', async () => {
@@ -26,23 +32,34 @@ Task.run('metrics', async () => {
 // ------------------------------------------------------------------
 // Build
 // ------------------------------------------------------------------
-Task.run('build', () => Task.build('src-build', { 
-  compiler: 'latest',
-  outdir: 'target/build',
-  additional: ['license', 'readme.md'],
-  packageJson: {
-    name: '@sinclair/project',
-    description: 'A software library',
-    version: '1.0.0',
-    author: 'user',
-    license: 'MIT',
-    keywords: ['tooling', 'automation'],
-    repository: { 
-      type: 'git',
-      url: 'https://github.com/sinclairzx81/project'
-    }
-  }
-}))
+Task.run('build', () =>
+  Task.build('src-build', {
+    compiler: 'latest',
+    outdir: 'target/build',
+    additional: ['license', 'readme.md'],
+    packageJson: {
+      name: '@sinclair/project',
+      description: 'A software library',
+      version: '1.0.0',
+      author: 'user',
+      license: 'MIT',
+      keywords: ['tooling', 'automation'],
+      repository: {
+        type: 'git',
+        url: 'https://github.com/sinclairzx81/project',
+      },
+    },
+  }))
+
+// ------------------------------------------------------------------
+// Test
+// ------------------------------------------------------------------
+Task.run('test', () => Task.test.run(['test/subset0', 'test/subset1']))
+
+// ------------------------------------------------------------------
+// Report
+// ------------------------------------------------------------------
+Task.run('report', () => Task.test.report(['test/subset0', 'test/subset1']))
 
 // ------------------------------------------------------------------
 // Serve

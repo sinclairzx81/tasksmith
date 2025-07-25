@@ -4,7 +4,7 @@ Tasksmith
 
 The MIT License (MIT)
 
-Copyright (c) 2025 Haydn Paterson (sinclair) 
+Copyright (c) 2025 Haydn Paterson (sinclair)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 /** Returns the formatted file size for the given byteCount */
 export function formatSize(byteCount: number): string {
-  const units = ["B", "KB", "MB", "GB", "TB", "PB"]
+  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
   let i = 0
   while (byteCount >= 1024 && i < units.length - 1) {
     byteCount /= 1024

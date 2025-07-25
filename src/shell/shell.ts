@@ -4,7 +4,7 @@ Tasksmith
 
 The MIT License (MIT)
 
-Copyright (c) 2025 Haydn Paterson (sinclair) 
+Copyright (c) 2025 Haydn Paterson (sinclair)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,11 +28,11 @@ THE SOFTWARE.
 
 /** Runs a shell command and throws if the exit code does not match. */
 export async function shell(command: string, exitcode: number = 0): Promise<number> {
-  const isWindows = Deno.build.os === "windows"
-  const process = new Deno.Command(isWindows ? "cmd.exe" : "sh", {
-    args: isWindows ? ["/c", command] : ["-c", command],
-    stdout: "inherit",
-    stderr: "inherit",
+  const isWindows = Deno.build.os === 'windows'
+  const process = new Deno.Command(isWindows ? 'cmd.exe' : 'sh', {
+    args: isWindows ? ['/c', command] : ['-c', command],
+    stdout: 'inherit',
+    stderr: 'inherit',
   })
   const { code } = await process.output()
   if (code !== exitcode) {

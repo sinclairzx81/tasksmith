@@ -4,7 +4,7 @@ Tasksmith
 
 The MIT License (MIT)
 
-Copyright (c) 2025 Haydn Paterson (sinclair) 
+Copyright (c) 2025 Haydn Paterson (sinclair)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,10 +30,10 @@ export type TRunCallback = (...params: string[]) => unknown | Promise<unknown>
 
 /** Runs a callback function if the provided name matches the first CLI argument. */
 export async function run<Callback extends TRunCallback>(taskName: string, callback: Callback) {
-  const [name, ...params] = Deno.args 
+  const [name, ...params] = Deno.args
   if (name === taskName) {
     console.time(name)
-    await callback(...params) 
+    await callback(...params)
     console.timeEnd(name)
   }
 }

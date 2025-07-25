@@ -4,7 +4,7 @@ Tasksmith
 
 The MIT License (MIT)
 
-Copyright (c) 2025 Haydn Paterson (sinclair) 
+Copyright (c) 2025 Haydn Paterson (sinclair)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@ const command = `deno run -A --no-lock npm:esbuild@0.25.2`
 // Bundle
 // ------------------------------------------------------------------
 /** Bundles the given module */
-export async function bundle(entryPath: string, outDir: string = `${settings.get().tempDirectory}/bundle`): Promise<void>  {
+export async function bundle(entryPath: string, outDir: string = `${settings.get().tempDirectory}/bundle`): Promise<void> {
   await folder(`${settings.get().tempDirectory}/bundle`).create()
   await shell(`${command} --bundle ${entryPath} --outfile=${outDir}/bundle/${path.basename(entryPath)}.js`)
 }
@@ -46,14 +46,14 @@ export async function bundle(entryPath: string, outDir: string = `${settings.get
 // Minify
 // ------------------------------------------------------------------
 /** Bundles + minifies the given module */
-export async function minify(entryPath: string, outDir: string = `${settings.get().tempDirectory}/minify`): Promise<void>  {
+export async function minify(entryPath: string, outDir: string = `${settings.get().tempDirectory}/minify`): Promise<void> {
   await folder(`${settings.get().tempDirectory}/bundle`).create()
   await shell(`${command} --bundle ${entryPath} --minify --outfile=${outDir}/bundle/${path.basename(entryPath)}.min.js`)
 }
 // ------------------------------------------------------------------
 // Metrics
 // ------------------------------------------------------------------
-async function computeMetricsForEntryPath(entryPath: string): Promise<{ path: string, bundled: string, minified: string, gzipped: string }> {
+async function computeMetricsForEntryPath(entryPath: string): Promise<{ path: string; bundled: string; minified: string; gzipped: string }> {
   const basename = path.basename(entryPath)
   // targets
   const bundleTarget = `${settings.get().tempDirectory}/metrics/${basename}-bundle.js`
@@ -72,12 +72,12 @@ async function computeMetricsForEntryPath(entryPath: string): Promise<{ path: st
     path: entryPath,
     bundled: compress.formatSize(bundled.length),
     minified: compress.formatSize(minified.length),
-    gzipped: compress.formatSize(minifiedGzip)
+    gzipped: compress.formatSize(minifiedGzip),
   }
 }
 /** Reports compression metrics for the entry paths */
 export async function metrics(entryPaths: string[]): Promise<void> {
-  const results = await Promise.all(entryPaths.map(path => computeMetricsForEntryPath(path)))
+  const results = await Promise.all(entryPaths.map((path) => computeMetricsForEntryPath(path)))
   console.table(results)
   console.log('')
   console.log('  visit: https://esbuild.github.io/analyze/ for metafile analysis')

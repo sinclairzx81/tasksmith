@@ -4,7 +4,7 @@ Tasksmith
 
 The MIT License (MIT)
 
-Copyright (c) 2025 Haydn Paterson (sinclair) 
+Copyright (c) 2025 Haydn Paterson (sinclair)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 ---------------------------------------------------------------------------*/
 
-import { path } from "../path/index.ts"
+import { path } from '../path/index.ts'
 
 // ----------------------------------------------------------------------
 // Remove Module-Level MIT Notice on Package Distribution
@@ -57,11 +57,11 @@ function removeNotice(content: string): string {
 // Rename Extension Rule
 // ------------------------------------------------------------------
 function renameExtensionRule(filePath: string, rules: [string, string][]): string {
-  let renamedPath = filePath;
+  let renamedPath = filePath
   for (const [old_extension, new_extension] of rules) {
     if (renamedPath.endsWith(old_extension)) {
       renamedPath = renamedPath.slice(0, -old_extension.length) + new_extension
-      break;
+      break
     }
   }
   return renamedPath
@@ -81,13 +81,13 @@ function renameSpecifierRule(content: string, rules: [string, string][]): string
   for (const [old_extension, new_extension] of rules) {
     const escapedOldExt = escapeRegExp(old_extension)
     // Replace static imports: e.g. from './module.ts'
-    const staticRegex = new RegExp(`(from\\s+['"][^'"]*)${escapedOldExt}(['"])`, "g")
+    const staticRegex = new RegExp(`(from\\s+['"][^'"]*)${escapedOldExt}(['"])`, 'g')
     content = content.replace(staticRegex, `$1${new_extension}$2`)
     // Replace dynamic imports: e.g. import('./module.ts')
-    const dynamicRegex = new RegExp(`(import\\(\\s*['"][^'"]*)${escapedOldExt}(['"]\\s*\\))`, "g")
+    const dynamicRegex = new RegExp(`(import\\(\\s*['"][^'"]*)${escapedOldExt}(['"]\\s*\\))`, 'g')
     content = content.replace(dynamicRegex, `$1${new_extension}$2`)
   }
-  return content;
+  return content
 }
 // ------------------------------------------------------------------
 // Process a Single File
@@ -127,14 +127,14 @@ async function processFile(srcPath: string, destPath: string, options: AddOption
 // Copy Folder (Recursively)
 // ------------------------------------------------------------------
 async function copyFolder(sourceDirectory: string, targetDirectory: string, options: AddOptions = defaultAddOptions()): Promise<void> {
-  await Deno.mkdir(targetDirectory, { recursive: true });
+  await Deno.mkdir(targetDirectory, { recursive: true })
   for await (const entry of Deno.readDir(sourceDirectory)) {
-    const srcPath = path.join(sourceDirectory, entry.name);
-    const destPath = path.join(targetDirectory, entry.name);
+    const srcPath = path.join(sourceDirectory, entry.name)
+    const destPath = path.join(targetDirectory, entry.name)
     if (entry.isDirectory) {
-      await copyFolder(srcPath, destPath, options);
+      await copyFolder(srcPath, destPath, options)
     } else if (entry.isFile) {
-      await processFile(srcPath, destPath, options);
+      await processFile(srcPath, destPath, options)
     }
   }
 }
@@ -148,9 +148,9 @@ export interface AddOptions {
 }
 function defaultAddOptions(): AddOptions {
   return {
-    extensionRename: [], 
-    specifierRename: [], 
-    removeNotices: false 
+    extensionRename: [],
+    specifierRename: [],
+    removeNotices: false,
   }
 }
 // ------------------------------------------------------------------
@@ -158,8 +158,8 @@ function defaultAddOptions(): AddOptions {
 // ------------------------------------------------------------------
 export async function add(directoryPath: string, fileOrFolderPath: string, options: AddOptions = defaultAddOptions()): Promise<void> {
   await Deno.mkdir(directoryPath, { recursive: true })
-  const stat = await Deno.stat(fileOrFolderPath);
-  const basename = fileOrFolderPath.split("/").pop()!
+  const stat = await Deno.stat(fileOrFolderPath)
+  const basename = fileOrFolderPath.split('/').pop()!
   if (stat.isDirectory) {
     const targetPath = path.join(directoryPath, basename)
     await copyFolder(fileOrFolderPath, targetPath, options)

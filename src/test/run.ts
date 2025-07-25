@@ -27,22 +27,43 @@ THE SOFTWARE.
 ---------------------------------------------------------------------------*/
 
 import { shell } from '../shell/index.ts'
+import { writeManifest } from './manifest.ts'
 
 // ------------------------------------------------------------------
-// Start
+// Run
 // ------------------------------------------------------------------
-const command = (version: string) => `deno run -A --no-lock npm:typescript@${version}/tsc`
-
-// ------------------------------------------------------------------
-// Functions
-// ------------------------------------------------------------------
-class Tsc {
-  constructor(private readonly version: string) {}
-  public async run(options: string): Promise<number> {
-    return await shell(`${command(this.version)} ${options}`)
+export interface RunOptions {
+  /** test manifest file path. default is `target/test/manifest.ts` */
+  manifest: string
+  /** test name filters. default is `''` */
+  filter: string
+  /** test watch mode. default is `false` */
+  watch: boolean
+  /** test parallel mode. default is `false` */
+  parallel: boolean
+  /** test no-check mode. default is `false` */
+  noCheck: boolean
+}
+function DefaultRunOptions(): RunOptions {
+  return {
+    manifest: 'target/test/manifest.ts',
+    filter: '',
+    watch: false,
+    parallel: false,
+    noCheck: false,
   }
 }
-/** Returns a typescript compiler version */
-export function tsc(version: string = 'latest'): Tsc {
-  return new Tsc(version)
+/**
+ * Runs tests under the given roots. Tests work by writing an entry manifest file
+ * for each ts module under the roots. Tests are executed from this manifest which
+ * yields much faster performance than running tests via module discovery.
+ */
+export async function run(roots: string[], options: Partial<RunOptions> = {}) {
+  const options_ = { ...DefaultRunOptions(), ...options }
+  writeManifest(roots, options_.manifest)
+
+  const filter = options_.filter === '' ? '' : `--filter ${options_.filter}`
+  const parallel = options_.parallel ? '--parallel' : ''
+  const watch = options_.watch ? '--watch' : ''
+  await shell(`deno test -A ${watch} ${filter} ${options_.manifest} ${parallel}`)
 }
