@@ -4,7 +4,7 @@ Tasksmith
 
 The MIT License (MIT)
 
-Copyright (c) 2025 Haydn Paterson (sinclair)
+Copyright (c) 2025 Haydn Paterson (sinclair) 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,4 +26,17 @@ THE SOFTWARE.
 
 ---------------------------------------------------------------------------*/
 
-export * as build from './build.ts'
+// deno-fmt-ignore-file
+// deno-lint-ignore-file
+
+import { BuildOptions } from '../options.ts'
+import { folder } from '../../folder/index.ts'
+
+/** Copies files from the additional option paths into the build root */
+export async function buildAdditional(options: BuildOptions): Promise<void> {
+  console.log('build-common: additional-files')
+  const outdir = `${options.outdir}`
+  for(const additional of options.additional) {
+    await folder(outdir).add(additional)
+  }
+}

@@ -4,7 +4,7 @@ Tasksmith
 
 The MIT License (MIT)
 
-Copyright (c) 2025 Haydn Paterson (sinclair)
+Copyright (c) 2025 Haydn Paterson (sinclair) 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,4 +26,28 @@ THE SOFTWARE.
 
 ---------------------------------------------------------------------------*/
 
-export * as build from './build.ts'
+// deno-fmt-ignore-file
+// deno-lint-ignore-file
+
+export interface BuildOptions {
+  /** The typescript compiler version */
+  compiler: `latest` | `next` | `4.9.5` | ({} & string),
+  /** The target directory to compile to */
+  outdir: string,
+  /** Additional files to include in the build (readme, license, etc) */
+  additional: string[],
+  /** Package Json required fields. The build process will handle module / submodule references */
+  packageJson: {
+    [key: string]: unknown
+    name: string
+    version: string
+    description: string
+    keywords: string[]
+    author: string
+    license: string
+    repository: {
+      type: 'git' | (string & {}),
+      url: 'https://github.com/sinclairzx81/project' | (string & {})
+    }
+  }
+}

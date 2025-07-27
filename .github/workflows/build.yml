@@ -19,8 +19,11 @@ jobs:
         with:
           deno-version: canary
 
-      - name: Build Library
-        run: deno task build
+      - name: Build Dual Library
+        run: deno task build:dual
+
+      - name: Build Esm Library
+        run: deno task build:esm
 
       - name: Run Bundle Metrics
         run: deno task metrics
