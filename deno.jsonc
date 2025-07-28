@@ -6,7 +6,8 @@
     "test": "deno run -A  tasks.ts test",
     "report": "deno run -A tasks.ts report",
     "metrics": "deno run -A  tasks.ts metrics",
-    "build": "deno run -A tasks.ts build"
+    "build:dual": "deno run -A tasks.ts build:dual",
+    "build:esm": "deno run -A tasks.ts build:esm"
   },
   "fmt": {
     "semiColons": false,

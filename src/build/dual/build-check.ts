@@ -4,7 +4,7 @@ Tasksmith
 
 The MIT License (MIT)
 
-Copyright (c) 2025 Haydn Paterson (sinclair)
+Copyright (c) 2025 Haydn Paterson (sinclair) 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,4 +26,16 @@ THE SOFTWARE.
 
 ---------------------------------------------------------------------------*/
 
-export * as build from './build.ts'
+// deno-fmt-ignore-file
+// deno-lint-ignore-file
+
+import { BuildOptions } from '../options.ts'
+import { attw } from '../../attw/index.ts'
+
+export async function buildCheck(options: BuildOptions): Promise<number> {
+  console.log('build-dual: check')
+  const target = `${options.outdir}`
+  const name = options.packageJson.name.replace('@', '').replaceAll('/', '-')
+  const pack = `${target}/${name}-${options.packageJson.version}.tgz`
+  return await attw(pack, { mode: 'dual' })
+}

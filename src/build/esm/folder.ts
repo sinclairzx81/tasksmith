@@ -26,4 +26,4 @@ THE SOFTWARE.
 
 ---------------------------------------------------------------------------*/
 
-export * as build from './build.ts'
+export const Folder = 'build' // Target Build Folder

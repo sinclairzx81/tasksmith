@@ -28,12 +28,17 @@ THE SOFTWARE.
 
 import { shell } from '../shell/index.ts'
 
-const command = `deno run -A --no-lock npm:@arethetypeswrong/cli@0.13.2`
+const command = `deno run -A --no-lock npm:@arethetypeswrong/cli@0.18.2`
 
-// ------------------------------------------------------------------
-// Functions
-// ------------------------------------------------------------------
+export interface AttwOptions {
+  mode: 'dual' | 'esm'
+}
+function defaultOptions(): AttwOptions {
+  return { mode: 'dual' }
+}
+
 /** Runs a "Are The Types Wrong" query on a npm .tgz pack */
-export async function attw(packFile: string) {
-  return await shell(`${command} ${packFile}`)
+export async function attw(packFile: string, options_: Partial<AttwOptions> = {}) {
+  const options = { ...defaultOptions(), ...options_ }
+  return options.mode === 'esm' ? await shell(`${command} ${packFile} --profile esm-only --ignore-rules no-resolution`) : await shell(`${command} ${packFile}`)
 }

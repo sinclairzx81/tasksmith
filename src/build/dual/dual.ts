@@ -4,7 +4,7 @@ Tasksmith
 
 The MIT License (MIT)
 
-Copyright (c) 2025 Haydn Paterson (sinclair)
+Copyright (c) 2025 Haydn Paterson (sinclair) 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,4 +26,30 @@ THE SOFTWARE.
 
 ---------------------------------------------------------------------------*/
 
-export * as build from './build.ts'
+// deno-fmt-ignore-file
+// deno-lint-ignore-file
+
+import { BuildOptions } from '../options.ts'
+
+import { buildAdditional } from '../common/build-additional.ts'
+import { buildPack } from '../common/build-pack.ts'
+import { buildClean } from '../common/build-clean.ts'
+
+import { buildCheck } from './build-check.ts'
+import { buildCjs, buildCjsAliasDirectories } from './build-cjs.ts'
+import { buildEsm } from './build-esm.ts'
+import { buildPackageJson } from './build-package-json.ts'
+
+/** Builds a publishable dual esm/cjs package for the given baseUrl / src directory */
+export async function dual(baseUrl: string, options: BuildOptions): Promise<void> {
+  await buildClean(baseUrl, options)
+  await buildAdditional(options)
+  await buildPackageJson(baseUrl, options)
+  await buildCjsAliasDirectories(baseUrl, options)
+  await Promise.all([
+    buildCjs(baseUrl, options),
+    buildEsm(baseUrl, options)
+  ])
+  await buildPack(options)
+  await buildCheck(options)
+}

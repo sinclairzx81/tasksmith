@@ -29,11 +29,34 @@ Task.run('metrics', async () => {
     'src-build/baz/baz.ts',
   ])
 })
+
 // ------------------------------------------------------------------
-// Build
+// Build: Dual
 // ------------------------------------------------------------------
-Task.run('build', () =>
-  Task.build('src-build', {
+Task.run('build:dual', () =>
+  Task.build.dual('src-build', {
+    compiler: 'latest',
+    outdir: 'target/build',
+    additional: ['license', 'readme.md'],
+    packageJson: {
+      name: '@sinclair/project',
+      description: 'A software library',
+      version: '1.0.0',
+      author: 'user',
+      license: 'MIT',
+      keywords: ['tooling', 'automation'],
+      repository: {
+        type: 'git',
+        url: 'https://github.com/sinclairzx81/project',
+      },
+    },
+  }))
+
+// ------------------------------------------------------------------
+// Build: Esm
+// ------------------------------------------------------------------
+Task.run('build:esm', () =>
+  Task.build.esm('src-build', {
     compiler: 'latest',
     outdir: 'target/build',
     additional: ['license', 'readme.md'],
