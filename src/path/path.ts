@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 ---------------------------------------------------------------------------*/
 
-import * as Path from 'jsr:@std/path@1.0.8'
+import * as Path from 'jsr:@std/path@1.1.0'
 
 // This file is a pass-through for 'jsr:@std/path'
 
@@ -40,7 +40,8 @@ export function dirname(path: string): string {
   return Path.dirname(path)
 }
 export function join(...paths: string[]): string {
-  return Path.join(...paths)
+  const [left, ...right] = paths
+  return Path.join(left, ...right)
 }
 export function extname(path: string): string {
   return Path.extname(path)

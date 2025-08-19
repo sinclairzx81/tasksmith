@@ -26,12 +26,33 @@ THE SOFTWARE.
 
 ---------------------------------------------------------------------------*/
 
-// https://github.com/lucacasonato/esbuild_deno_loader
+// deno-fmt-ignore-file
 
+import { HandleRequest } from './request.ts'
+import { HandleSocket, StartWatch } from './socket.ts'
+
+// ------------------------------------------------------------------
+// ServeOptions
+// ------------------------------------------------------------------
 export interface ServeOptions {
+  /** Serve port to listen on. Default is 5000 */
   port: number
 }
-
-export function serve(_indexHtml: string, _port: ServeOptions): Promise<void> {
-  throw Error('not implemented')
+function DefaultServeOptions(): ServeOptions {
+  return { port: 5000 }
+}
+// ------------------------------------------------------------------
+// Serve
+// ------------------------------------------------------------------
+/** Serves the given directory over HTTP. Supports auto reload for HTML files */
+export function serve(directory: string = Deno.cwd(), serveOptions: Partial<ServeOptions> = {}): Deno.HttpServer<Deno.NetAddr> {
+  const options = { ...DefaultServeOptions(), ...serveOptions }
+  StartWatch(directory)
+  console.log('serve', options)
+  return Deno.serve({ hostname: "0.0.0.0", port: options.port, onListen: () => {} }, async request => {
+    const url = new URL(request.url)
+    return (url.pathname === "/__reload")
+      ? HandleSocket(request)
+      : await HandleRequest(request, { directory, port: options.port })
+  })
 }
