@@ -63,10 +63,10 @@ Task.run('build:esm', () =>
 // ------------------------------------------------------------------
 Task.run('metrics', async () => {
   await Task.esbuild.metrics([
-    'src-build/index.ts',
-    'src-build/foo/foo.ts',
-    'src-build/bar/bar.ts',
-    'src-build/baz/baz.ts',
+    'ref/build/index.ts',
+    'ref/build/foo/foo.ts',
+    'ref/build/bar/bar.ts',
+    'ref/build/baz/baz.ts',
   ])
 })
 // ------------------------------------------------------------------
