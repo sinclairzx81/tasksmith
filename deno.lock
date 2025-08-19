@@ -1,11 +1,15 @@
 {
-  "version": "4",
+  "version": "5",
   "specifiers": {
-    "jsr:@std/path@1.0.8": "1.0.8"
+    "jsr:@std/media-types@1.1.0": "1.1.0",
+    "jsr:@std/path@1.1.0": "1.1.0"
   },
   "jsr": {
-    "@std/path@1.0.8": {
-      "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
+    "@std/media-types@1.1.0": {
+      "integrity": "c9d093f0c05c3512932b330e3cc1fe1d627b301db33a4c2c2185c02471d6eaa4"
+    },
+    "@std/path@1.1.0": {
+      "integrity": "ddc94f8e3c275627281cbc23341df6b8bcc874d70374f75fec2533521e3d6886"
     }
   }
 }
