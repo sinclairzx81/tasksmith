@@ -26,6 +26,10 @@ THE SOFTWARE.
 
 ---------------------------------------------------------------------------*/
 
+import { Debounce } from './debounce.ts'
+
+const debounce = new Debounce({ dispatchLast: true, millisecond: 200 })
+
 // ------------------------------------------------------------------
 // Watch
 // ------------------------------------------------------------------
@@ -33,7 +37,7 @@ export async function StartWatch(directory: string) {
   const watcher = Deno.watchFs(directory)
   for await (const event of watcher) {
     if (['create', 'modify', 'remove'].includes(event.kind)) {
-      BroadcastReload()
+      debounce.run(() => BroadcastReload())
     }
   }
 }
