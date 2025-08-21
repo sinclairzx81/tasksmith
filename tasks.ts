@@ -1,5 +1,7 @@
 import { Task } from './src/index.ts'
 
+const Version = '0.11.1'
+
 // ------------------------------------------------------------------
 // Clean
 // ------------------------------------------------------------------
@@ -77,4 +79,10 @@ Task.run('test', () => Task.test.run(['test/subset0', 'test/subset1']))
 // Report
 // ------------------------------------------------------------------
 Task.run('report', () => Task.test.report(['test/subset0', 'test/subset1']))
-
+// ------------------------------------------------------------------
+// Publish
+// ------------------------------------------------------------------
+Task.run('publish', async () => {
+  await Task.shell(`git tag ${Version}`)
+  await Task.shell(`git push origin ${Version}`)
+})
