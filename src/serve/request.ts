@@ -47,7 +47,9 @@ async function FileExists(filePath: string): Promise<boolean> {
 // ------------------------------------------------------------------
 const ReloadScript = (port: number) => (`<script>
 (function connect() {
-  const socket = new WebSocket('ws://localhost:${port}/__reload')
+  const proto = window.location.protocol === 'https:' ? 'wss' : 'ws'
+  const url = proto + '://' + window.location.hostname + ':' + ${port} + '/__reload'
+  const socket = new WebSocket(url)
   socket.onopen = () => console.log('%ctasksmith: connected', 'color: #888')
   socket.onmessage = () => window.location.reload()
   socket.onclose = () => setTimeout(connect, 2000)

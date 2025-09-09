@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 import { Debounce } from './debounce.ts'
 
-const debounce = new Debounce({ dispatchLast: true, millisecond: 200 })
+const debounce = new Debounce({ dispatchLast: true, millisecond: 250 })
 
 // ------------------------------------------------------------------
 // Watch

@@ -2,7 +2,7 @@
 
 <h1>Tasksmith</h1>
 
-<p>Command Line Automation for Deno</p>
+<p>Task Automation for Deno</p>
 
 <img src="tasksmith.png" />
 
@@ -15,16 +15,32 @@
 
 ## Overview
 
-Tasksmith is a command line automation tool for Deno. It offers a CLI router that routes tasks to TypeScript functions. It also includes a suite of built in functions to assist with project management workflows.
+Tasksmith is a task automation tool for Deno that routes the first command line argument to TypeScript functions. It also has a suite functions to assist with various task automation workflows. 
 
 License: MIT
 
-## Usage
+## Install
 
-Tasksmith is a command-line router that routes tasks based name.
+Tasksmith is only available via tagged revision provided by this repository. 
+
+
 
 ```typescript
-import { Task } from 'https://raw.githubusercontent.com/sinclairzx81/tasksmith/0.8.0/src/index.ts'
+// file: deno.json
+
+{
+  "imports": {
+    "tasksmith": "https://raw.githubusercontent.com/sinclairzx81/tasksmith/0.9.0/src/index.ts"
+  }
+}
+```
+
+## Usage
+
+Tasksmith will route the first command line argument to a function.
+
+```typescript
+import { Task } from 'tasksmith'
 
 Task.run('test', () => console.log('test'))
 
@@ -34,12 +50,12 @@ Task.run('build', () => console.log('build'))
 Tasks are usually configured and run from `deno.json`
 
 ```typescript
+// file: deno.json
+
 {
   "tasks": {
-    "test": "deno run -A  tasks.ts test",
+    "test": "deno run -A tasks.ts test",
     "build": "deno run -A tasks.ts build" 
   }
 }
 ```
-
-Check [here](https://github.com/sinclairzx81/tasksmith/tags) for the latest tagged version.
