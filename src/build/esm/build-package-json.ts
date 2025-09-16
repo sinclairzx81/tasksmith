@@ -46,14 +46,15 @@ export type PackageEntryAndExports = {
 }>
 }
 async function buildPackageExports(baseUri: string): Promise<PackageEntryAndExports> {
-  const exports: Record<string, { import: string }> = {}
+  const exports: Record<string, { import: string, default: string }> = {}
   for (const filePath of await folder(baseUri).indexList()) {
     const isRoot = filePath === 'index.ts';
     const submoduleSection = isRoot ? '.' : `./${filePath.replace(/\/index\.ts$/, '')}`
     const submoduleBase = isRoot ? '' : `${filePath.replace(/\/index\.ts$/, '')}`
     const esmDir = submoduleBase ? `./${Folder}/${submoduleBase}` : `./${Folder}`
     exports[submoduleSection] = {
-      import: `${esmDir}/index.mjs`
+      import: `${esmDir}/index.mjs`,
+      default: `${esmDir}/index.mjs`
     }
   }
   return {
