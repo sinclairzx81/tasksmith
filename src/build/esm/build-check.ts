@@ -37,5 +37,8 @@ export async function buildCheck(options: BuildOptions): Promise<number> {
   const target = `${options.outdir}`
   const name = options.packageJson.name.replace('@', '').replaceAll('/', '-')
   const pack = `${target}/${name}-${options.packageJson.version}.tgz`
-  return await attw(pack, { mode: 'esm' })
+  return await attw(pack, { mode: 'esm-only', ignore: [
+    'no-resolution',      // Ignore failed CJS resolution
+    'cjs-resolves-to-esm' // Ignore CJS resolves to ESM (require(ESM))
+  ] })
 }

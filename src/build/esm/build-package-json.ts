@@ -36,6 +36,12 @@ import { file } from '../../file/index.ts'
 import { Folder } from './folder.ts'
 
 // ------------------------------------------------------------------
+// Package: Type
+// ------------------------------------------------------------------
+export function buildType() {
+  return { type: 'module' }
+}
+// ------------------------------------------------------------------
 // Package: Entry + Exports Section
 // ------------------------------------------------------------------
 export type PackageEntryAndExports = {
@@ -45,15 +51,16 @@ export type PackageEntryAndExports = {
   import: string
 }>
 }
-async function buildPackageExports(baseUri: string): Promise<PackageEntryAndExports> {
-  const exports: Record<string, { import: string }> = {}
+async function buildExports(baseUri: string): Promise<PackageEntryAndExports> {
+  const exports: Record<string, { import: string, default: string }> = {}
   for (const filePath of await folder(baseUri).indexList()) {
     const isRoot = filePath === 'index.ts';
     const submoduleSection = isRoot ? '.' : `./${filePath.replace(/\/index\.ts$/, '')}`
     const submoduleBase = isRoot ? '' : `${filePath.replace(/\/index\.ts$/, '')}`
     const esmDir = submoduleBase ? `./${Folder}/${submoduleBase}` : `./${Folder}`
     exports[submoduleSection] = {
-      import: `${esmDir}/index.mjs`
+      import: `${esmDir}/index.mjs`,    // ESM
+      default: `${esmDir}/index.mjs`,   // Require(ESM) | https://github.com/arethetypeswrong/arethetypeswrong.github.io/issues/252
     }
   }
   return {
@@ -70,7 +77,7 @@ export interface PackageTypeVersions {
     "*": Record<string, string[]>
   }
 }
-export async function buildPackageTypeVersions(baseUrl: string): Promise<PackageTypeVersions> {
+export async function buildTypeVersions(baseUrl: string): Promise<PackageTypeVersions> {
   const typeVersions: Record<string, string[]> = {}
   for (const filePath of await folder(baseUrl).indexList()) {
     const isRoot = filePath === 'index.ts'
@@ -93,10 +100,12 @@ export async function buildPackageTypeVersions(baseUrl: string): Promise<Package
 export async function buildPackageJson(baseUrl: string, options: BuildOptions): Promise<void> {
   console.log('build-esm: package-json')
   const packageJsonPath = `${options.outdir}/package.json`
-  const packageExports = await buildPackageExports(baseUrl)
-  const packageTypeVersions = await buildPackageTypeVersions(baseUrl)
+  const packageType = buildType()
+  const packageExports = await buildExports(baseUrl)
+  const packageTypeVersions = await buildTypeVersions(baseUrl)
   const packageJsonContent = JSON.stringify({
     ...options.packageJson,
+    ...packageType,
     ...packageExports,
     ...packageTypeVersions
   }, null, 2)

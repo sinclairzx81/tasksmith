@@ -28,17 +28,41 @@ THE SOFTWARE.
 
 import { shell } from '../shell/index.ts'
 
+// ------------------------------------------------------------------
+// Command
+// ------------------------------------------------------------------
 const command = `deno run -A --no-lock npm:@arethetypeswrong/cli@0.18.2`
 
+// ------------------------------------------------------------------
+// Rules
+// ------------------------------------------------------------------
+export type Rules =
+  | 'no-resolution'
+  | 'untyped-resolution'
+  | 'false-cjs'
+  | 'false-esm'
+  | 'cjs-resolves-to-esm'
+  | 'fallback-condition'
+  | 'cjs-only-exports-default'
+  | 'false-export-default'
+  | 'unexpected-module-syntax'
+  | 'missing-export-equals'
+  | 'internal-resolution-error'
+  | 'named-exports'
+
+// ------------------------------------------------------------------
+// Rules
+// ------------------------------------------------------------------
 export interface AttwOptions {
-  mode: 'dual' | 'esm'
+  mode: 'dual' | 'esm-only'
+  ignore: Rules[]
 }
 function defaultOptions(): AttwOptions {
-  return { mode: 'dual' }
+  return { mode: 'dual', ignore: [] }
 }
-
 /** Runs a "Are The Types Wrong" query on a npm .tgz pack */
 export async function attw(packFile: string, options_: Partial<AttwOptions> = {}) {
   const options = { ...defaultOptions(), ...options_ }
-  return options.mode === 'esm' ? await shell(`${command} ${packFile} --profile esm-only --ignore-rules no-resolution`) : await shell(`${command} ${packFile}`)
+  const ignore_rules = options.ignore.length > 0 ? `--ignore-rules ${options.ignore.join(' ')}` : ''
+  return options.mode === 'esm-only' ? await shell(`${command} ${packFile} --profile esm-only ${ignore_rules}`) : await shell(`${command} ${packFile} ${ignore_rules}`)
 }
