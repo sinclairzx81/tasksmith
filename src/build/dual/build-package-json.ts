@@ -56,11 +56,9 @@ export type PackageEntryAndExports = {
   module: string,
   exports: Record<string, {
     import: {
-      types: string,
       default: string
     },
     require: {
-      types: string,
       default: string
     }
   }>
@@ -68,11 +66,9 @@ export type PackageEntryAndExports = {
 async function buildExports(baseUri: string): Promise<PackageEntryAndExports> {
   const exports: Record<string, {
     import: {
-      types: string,
       default: string
     },
     require: {
-      types: string,
       default: string
     }
   }> = {}
@@ -85,11 +81,9 @@ async function buildExports(baseUri: string): Promise<PackageEntryAndExports> {
     const cjsDir = submoduleBase ? `./${Folder}/cjs/${submoduleBase}` : `./${Folder}/cjs`
     exports[submoduleSection] = {
       require: {
-        types: `${cjsDir}/index.d.ts`,
         default: `${cjsDir}/index.js`
       },
       import: {
-        types: `${esmDir}/index.d.mts`,
         default: `${esmDir}/index.mjs`
       }
     }
