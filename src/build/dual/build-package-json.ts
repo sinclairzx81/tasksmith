@@ -35,6 +35,12 @@ import { file } from '../../file/index.ts'
 import { Folder } from './folder.ts'
 
 // ------------------------------------------------------------------
+// Package: Type
+// ------------------------------------------------------------------
+export function buildType() {
+  return { type: 'commonjs' }
+}
+// ------------------------------------------------------------------
 // Package: Entry + Exports Section
 //
 // Note: In Dual builds, we use inline types on exports as well as
@@ -123,10 +129,12 @@ export async function buildTypeVersions(baseUrl: string): Promise<PackageTypeVer
 export async function buildPackageJson(baseUrl: string, options: BuildOptions): Promise<void> {
   console.log('build-dual: package-json')
   const packageJsonPath = `${options.outdir}/package.json`
+  const packageType = buildType()
   const packageExports = await buildExports(baseUrl)
   const packageTypeVersions = await buildTypeVersions(baseUrl)
   const packageJsonContent = JSON.stringify({
-    ...options.packageJson,  
+    ...options.packageJson,
+    ...packageType, 
     ...packageExports,
     ...packageTypeVersions
   }, null, 2)
