@@ -59,7 +59,7 @@ export type PackageEntryAndExports = {
     }
   }>
 }
-async function buildPackageExports(baseUri: string): Promise<PackageEntryAndExports> {
+async function buildExports(baseUri: string): Promise<PackageEntryAndExports> {
   const exports: Record<string, {
     import: {
       types: string,
@@ -103,27 +103,28 @@ export interface PackageTypeVersions {
     "*": Record<string, string[]>
   }
 }
-export async function buildPackageTypeVersions(baseUrl: string): Promise<PackageTypeVersions> {
+export async function buildTypeVersions(baseUrl: string): Promise<PackageTypeVersions> {
   const typeVersions: Record<string, string[]> = {}
   for (const filePath of await folder(baseUrl).indexList()) {
     const isRoot = filePath === 'index.ts'
     const submodulePath = isRoot ? '.' : filePath.replace(/\/index\.ts$/, '')
-    const definitionPath = `./${Folder}/${submodulePath}/index.d.mts`
+    const definitionPath = submodulePath === '.'
+      ? `./${Folder}/esm/index.d.mts`
+      : `./${Folder}/esm/${submodulePath}/index.d.mts`
     typeVersions[submodulePath] = [definitionPath]
   }
-  typeVersions['.'] = !typeVersions['.'] ? [`./${Folder}/index.d.mts`] : typeVersions['.']
   return {
     typesVersions: {
-      "*": typeVersions
-    }
+      '*': typeVersions,
+    },
   }
 }
 /** Builds and writes the package.json file */
 export async function buildPackageJson(baseUrl: string, options: BuildOptions): Promise<void> {
   console.log('build-dual: package-json')
   const packageJsonPath = `${options.outdir}/package.json`
-  const packageExports = await buildPackageExports(baseUrl)
-  const packageTypeVersions = await buildPackageTypeVersions(baseUrl)
+  const packageExports = await buildExports(baseUrl)
+  const packageTypeVersions = await buildTypeVersions(baseUrl)
   const packageJsonContent = JSON.stringify({
     ...options.packageJson,  
     ...packageExports,

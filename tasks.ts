@@ -1,6 +1,6 @@
 import { Task } from './src/index.ts'
 
-const Version = '0.9.1'
+const Version = '0.9.3'
 
 // ------------------------------------------------------------------
 // Clean

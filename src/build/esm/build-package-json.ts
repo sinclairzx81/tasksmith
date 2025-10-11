@@ -48,8 +48,8 @@ export type PackageEntryAndExports = {
   types: string,
   module: string,
   exports: Record<string, {
-  import: string
-}>
+    import: string
+  }>
 }
 async function buildExports(baseUri: string): Promise<PackageEntryAndExports> {
   const exports: Record<string, { import: string, default: string }> = {}
@@ -82,14 +82,15 @@ export async function buildTypeVersions(baseUrl: string): Promise<PackageTypeVer
   for (const filePath of await folder(baseUrl).indexList()) {
     const isRoot = filePath === 'index.ts'
     const submodulePath = isRoot ? '.' : filePath.replace(/\/index\.ts$/, '')
-    const definitionPath = `./${Folder}/${submodulePath}/index.d.mts`
+    const definitionPath = submodulePath === '.'
+      ? `./${Folder}/index.d.mts`
+      : `./${Folder}/${submodulePath}/index.d.mts`
     typeVersions[submodulePath] = [definitionPath]
   }
-  typeVersions['.'] = !typeVersions['.'] ? [`./${Folder}/index.d.mts`] : typeVersions['.']
   return {
     typesVersions: {
-      "*": typeVersions
-    }
+      '*': typeVersions,
+    },
   }
 }
 // ------------------------------------------------------------------
