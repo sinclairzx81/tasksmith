@@ -56,6 +56,7 @@ export async function buildEsm(baseUrl: string, options: BuildOptions): Promise<
       strict: true,
       target: "ES2020",
       module: "ESNext",
+      moduleResolution: 'Node',
       declaration: true,
     },
     files
