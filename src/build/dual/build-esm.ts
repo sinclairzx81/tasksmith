@@ -58,6 +58,7 @@ export async function buildEsm(baseUrl: string, options: BuildOptions): Promise<
       module: "ESNext",
       moduleResolution: 'Node',
       declaration: true,
+      skipLibCheck: true,
     },
     files
   }, null, 2)) 

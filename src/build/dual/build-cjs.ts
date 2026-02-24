@@ -80,6 +80,7 @@ export async function buildCjs(baseUrl: string, options: BuildOptions): Promise<
       target: "ES2020",
       module: "CommonJS",
       declaration: true,
+      skipLibCheck: true,
     },
     files
   }, null, 2))
