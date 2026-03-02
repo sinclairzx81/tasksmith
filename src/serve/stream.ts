@@ -28,13 +28,13 @@ THE SOFTWARE.
 
 // deno-fmt-ignore-file
 
-export interface CreateReadStreamOptions {
-  start?: number
-  end?: number
-  chunkSize?: number
+export interface PartialReadableStreamOptions {
+  start: number
+  end: number
+  chunkSize: number
 }
 /** Replicates Node createReadStream with offsets */
-export async function createReadStream(filePath: string, options: CreateReadStreamOptions = {}): Promise<ReadableStream<Uint8Array>> {
+export async function PartialReadableStream(filePath: string, options: Partial<PartialReadableStreamOptions> = {}): Promise<ReadableStream<Uint8Array>> {
   const { start = 0, end = Infinity, chunkSize = 64 * 1024 } = options
   const file = await Deno.open(filePath, { read: true })
   await file.seek(start, Deno.SeekMode.Start)

@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 import { path } from '../path/index.ts'
 import { contentType } from 'jsr:@std/media-types@1.1.0'
-import { createReadStream } from './stream.ts'
+import { PartialReadableStream } from './stream.ts'
 
 // ------------------------------------------------------------------
 // FileExists
@@ -108,8 +108,39 @@ function DecodeResponseInit(request: Request, filePath: string): ResponseInit & 
       'Content-Length': `${stat.size}`,
       'Content-Disposition': `inline; filename=${disposition}`,
       'Cache-Control': 'public',
+      // Shared Array Buffer
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
     },
   }
+}
+// ------------------------------------------------------------------
+// NotFoundResponse
+// ------------------------------------------------------------------
+function NotFoundResponse(port: number): Response {
+  return new Response(InjectReloadScript('<html><head></head><body>Not found</body></html>', port), {
+    status: 404,
+    headers: {
+      'Content-Type': 'text/html',
+      // Shared Array Buffer
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
+  })
+}
+// ------------------------------------------------------------------
+// HtmlResponse
+// ------------------------------------------------------------------
+function HtmlResponse(content: string, port: number): Response {
+  return new Response(InjectReloadScript(content, port), {
+    status: 200,
+    headers: {
+      'Content-Type': 'text/html',
+      // Shared Array Buffer
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
+  })
 }
 // ------------------------------------------------------------------
 // HandleRequest
@@ -127,27 +158,25 @@ export async function HandleRequest(request: Request, options: RequestOptions): 
   // Not Found
   // ----------------------------------------------------------------
   if (!(await FileExists(filePath))) {
-    return new Response('File not found', { status: 404 })
+    return NotFoundResponse(options.port)
   }
   // ----------------------------------------------------------------
   // Html
   // ----------------------------------------------------------------
   if (mimeType.startsWith('text/html')) {
-    const content = await Deno.readTextFile(filePath)
-    return new Response(InjectReloadScript(content, options.port), {
-      status: 200,
-      headers: { 'Content-Type': mimeType },
-    })
+    return HtmlResponse(await Deno.readTextFile(filePath), options.port)
   }
   // ----------------------------------------------------------------
-  // Response
+  // Partial
   // ----------------------------------------------------------------
   const responseInit = DecodeResponseInit(request, filePath)
   if (responseInit.status === 206) {
-    const readable = await createReadStream(filePath, responseInit.range)
+    const readable = await PartialReadableStream(filePath, responseInit.range)
     return new Response(readable, responseInit)
-  } else {
-    const file = await Deno.open(filePath, { read: true })
-    return new Response(file.readable, responseInit)
   }
+  // ----------------------------------------------------------------
+  // Standard
+  // ----------------------------------------------------------------
+  const file = await Deno.open(filePath, { read: true })
+  return new Response(file.readable, responseInit)
 }
