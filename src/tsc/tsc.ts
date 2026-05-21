@@ -31,7 +31,7 @@ import { shell } from '../shell/index.ts'
 // ------------------------------------------------------------------
 // Start
 // ------------------------------------------------------------------
-const command = (version: string) => `deno run -A --no-lock npm:typescript@${version}/tsc`
+const command = (version: string) => `deno run --allow-env --allow-read --allow-write --no-lock npm:typescript@${version}/tsc`
 
 // ------------------------------------------------------------------
 // Functions
