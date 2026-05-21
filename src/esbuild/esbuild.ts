@@ -32,7 +32,7 @@ import { compress } from '../compress/index.ts'
 import { shell } from '../shell/index.ts'
 import { path } from '../path/index.ts'
 
-const command = `deno run -A --no-lock npm:esbuild@0.25.2`
+const command = `deno run --allow-run --allow-env --no-lock npm:esbuild@0.25.2`
 
 // ------------------------------------------------------------------
 // Bundle
