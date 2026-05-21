@@ -29,9 +29,9 @@ THE SOFTWARE.
 import { shell } from '../shell/index.ts'
 
 // ------------------------------------------------------------------
-// Command
+// Command (allow-sys required for windows)
 // ------------------------------------------------------------------
-const command = `deno run --allow-env --allow-read --no-lock npm:@arethetypeswrong/cli@0.18.2`
+const command = `deno run --allow-env --allow-read --allow-sys=osRelease --no-lock npm:@arethetypeswrong/cli@0.18.2`
 
 // ------------------------------------------------------------------
 // Rules
