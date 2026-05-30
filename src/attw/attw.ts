@@ -31,7 +31,7 @@ import { shell } from '../shell/index.ts'
 // ------------------------------------------------------------------
 // Command (allow-sys required for windows)
 // ------------------------------------------------------------------
-const command = `deno run --allow-env --allow-read --allow-sys=osRelease --no-lock npm:@arethetypeswrong/cli@0.18.2`
+const command = `deno run --allow-env --allow-read --allow-sys=osRelease --no-lock npm:@arethetypeswrong/cli@0.18.3`
 
 // ------------------------------------------------------------------
 // Rules
@@ -65,16 +65,5 @@ export async function attw(packFile: string, options_: Partial<AttwOptions> = {}
   const options = { ...defaultOptions(), ...options_ }
   const ignore_rules = options.ignore.length > 0 ? `--ignore-rules ${options.ignore.join(' ')}` : ''
   const action = options.mode === 'esm-only' ? shell(`${command} ${packFile} --profile esm-only ${ignore_rules}`) : shell(`${command} ${packFile} ${ignore_rules}`)
-  // ----------------------------------------------------------------
-  // Note: fflate was broken on version 0.8.3 (review on fix)
-  // ----------------------------------------------------------------
-  try {
-    return await action
-  } catch (error) {
-    console.log('--------------------------------------------------------')
-    console.log('ATTW ERROR:')
-    console.log('--------------------------------------------------------')
-    console.error(error)
-    return 0
-  }
+  return await action
 }
