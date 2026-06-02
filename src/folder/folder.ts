@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 ---------------------------------------------------------------------------*/
 
-import { add, addContents, AddOptions } from './add.ts'
+import { add, addContents, type AddOptions } from './add.ts'
 import { deleteFolder } from './delete.ts'
 import { createFolder } from './create.ts'
 import { indexList } from './index-list.ts'

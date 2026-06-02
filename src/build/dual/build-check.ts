@@ -29,7 +29,7 @@ THE SOFTWARE.
 // deno-fmt-ignore-file
 // deno-lint-ignore-file
 
-import { BuildOptions } from '../options.ts'
+import type { BuildOptions } from '../options.ts'
 import { attw } from '../../attw/index.ts'
 
 export async function buildCheck(options: BuildOptions): Promise<number> {

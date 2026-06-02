@@ -29,7 +29,7 @@ THE SOFTWARE.
 // deno-fmt-ignore-file
 // deno-lint-ignore-file
 
-import { BuildOptions } from '../options.ts'
+import type { BuildOptions } from '../options.ts'
 import { folder } from '../../folder/index.ts'
 
 /** Cleans the build. This happens as a first step before any other task */

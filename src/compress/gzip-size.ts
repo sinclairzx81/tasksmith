@@ -27,7 +27,7 @@ THE SOFTWARE.
 ---------------------------------------------------------------------------*/
 
 /** Gzip compresses the given buffer and returns the byte count */
-export async function gzipSize(buffer: Uint8Array): Promise<number> {
+export async function gzipSize(buffer: Uint8Array<ArrayBuffer>): Promise<number> {
   const stream = new CompressionStream('gzip')
   const writer = stream.writable.getWriter()
   writer.write(buffer)

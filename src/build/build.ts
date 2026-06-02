@@ -26,7 +26,6 @@ THE SOFTWARE.
 
 ---------------------------------------------------------------------------*/
 
+export type { BuildOptions } from './options.ts'
 export { dual } from './dual/dual.ts'
 export { esm } from './esm/esm.ts'
-
-export { type BuildOptions } from './options.ts'

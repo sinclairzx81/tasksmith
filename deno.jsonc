@@ -16,5 +16,9 @@
     "singleQuote": true,
     "lineWidth": 300
   },
-  "exclude": []
+  "exclude": [],
+  "compilerOptions": {
+    "strict": true,
+    "verbatimModuleSyntax": true
+  }
 }

@@ -29,7 +29,7 @@ THE SOFTWARE.
 // deno-fmt-ignore-file
 // deno-lint-ignore-file
 
-import { BuildOptions } from '../options.ts'
+import type { BuildOptions } from '../options.ts'
 import { shell } from '../../shell/index.ts'
 
 /** Runs a pack on the build producing a .tar.gz */
