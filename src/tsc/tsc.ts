@@ -30,8 +30,11 @@ import { shell } from '../shell/index.ts'
 
 // ------------------------------------------------------------------
 // Start
+//
+// --allow-run (required for TypeScript 7)
+//
 // ------------------------------------------------------------------
-const command = (version: string) => `deno run --allow-env --allow-read --allow-write --no-lock npm:typescript@${version}/tsc`
+const command = (version: string) => `deno run --allow-env --allow-read --allow-write --allow-run --no-lock npm:typescript@${version}/tsc`
 
 // ------------------------------------------------------------------
 // Functions
