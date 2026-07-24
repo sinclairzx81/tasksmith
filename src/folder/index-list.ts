@@ -26,6 +26,18 @@ THE SOFTWARE.
 
 ---------------------------------------------------------------------------*/
 
+// ------------------------------------------------------------------
+// IndexListSort
+// ------------------------------------------------------------------
+function indexListSort(items: string[]): string[] {
+  return items.sort((a, b) => {
+    const [depthA, depthB] = [a.split('/').length, b.split('/').length]
+    return (depthA !== depthB) ? depthB - depthA : a.localeCompare(b)
+  })
+}
+// ------------------------------------------------------------------
+// IndexList
+// ------------------------------------------------------------------
 /** Returns an index list of `index.ts` files from this folder (build process) */
 export async function indexList(directoryPath: string, depth: number = 1, currentDepth: number = 0, root: string = directoryPath): Promise<string[]> {
   const indexFile = `${directoryPath}/index.ts`
@@ -46,5 +58,5 @@ export async function indexList(directoryPath: string, depth: number = 1, curren
   }
   const output = directoryPath === root ? 'index.ts' : indexFile.slice(root.length + 1)
   result.push(output)
-  return result
+  return indexListSort(result)
 }
